@@ -1,0 +1,23 @@
+# Python virtual environment
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# Generated model artifacts (retrained, not versioned)
+models/*.pkl
+models/*.joblib
+
+# Dataset (large, downloaded separately)
+data/news.csv
+data/*.csv
+
+# OS files
+.DS_Store
+
+# Jupyter / IDE
+.vscode/
+.idea/
