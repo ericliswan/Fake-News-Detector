@@ -1,4 +1,4 @@
-# 📰 Fake News Detector
+# Fake News Detector
 
 A machine learning project that reads a news article's text and predicts whether it is **REAL** or **FAKE** — powered by TF-IDF text vectorization and a Passive Aggressive Classifier, with a Streamlit web interface for live testing.
 
