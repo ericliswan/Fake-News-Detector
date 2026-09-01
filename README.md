@@ -1,94 +1,33 @@
-# Fake News Detector
+# 📰 Fake News Detector
 
-A beginner-friendly machine learning project that reads a news article's text and predicts whether it is **REAL** or **FAKE**, using TF-IDF text vectorization and a Passive Aggressive Classifier. Includes a Streamlit web UI so you can paste an article and get an instant verdict.
+A machine learning project that reads a news article's text and predicts whether it is **REAL** or **FAKE** — powered by TF-IDF text vectorization and a Passive Aggressive Classifier, with a Streamlit web interface for live testing.
+
+## About
+
+The goal is simple: paste in an article or headline and get back a verdict — real or fake. Under the hood it's a supervised text-classification model trained on roughly 7,800 hand-labeled news articles.
 
 ## How it works
 
-1. **Text → numbers:** each article's text is converted into a TF-IDF vector, which weights words by how important they are relative to the whole dataset.
-2. **Learn:** a **Passive Aggressive Classifier** is trained on ~7,800 labeled news articles (80% train / 20% test).
-3. **Predict:** for new text, the same vectorizer turns it into a vector and the classifier returns `REAL` or `FAKE`, along with a confidence score.
+The pipeline is three steps:
 
-## What's inside
+1. **Text → numbers (TF-IDF).** Each article's raw text is converted into a TF-IDF (Term Frequency–Inverse Document Frequency) vector. TF-IDF weights words by how distinctive they are: common words like "the" or "and" carry almost no signal, while rare, meaningful words carry more. This turns free-form text into a numeric representation a model can learn from.
 
-```
-├── PROJECT_PLAN.md      # in-depth step-by-step build plan & pitfalls
-├── requirements.txt     # Python dependencies
-├── data/
-│   └── news.csv         # the dataset (see below)
-├── models/
-│   ├── tfidf.pkl        # saved TF-IDF vectorizer
-│   └── pac_model.pkl    # saved classifier
-├── train.py             # load data → train → save model artifacts
-├── predict.py           # load artifacts → classify a single input
-└── app.py               # Streamlit web UI
-```
+2. **Learn (Passive Aggressive Classifier).** The vectors are fed into a Passive Aggressive Classifier, an online learning algorithm that fits well to text data. It stays "passive" when predictions are correct and "aggressively" updates its weights when it makes a mistake. The model is trained on 80% of the data and evaluated on the held-out 20%, achieving roughly 92–93% accuracy.
 
-> Note: some of these files (`train.py`, `predict.py`, `app.py`, the `data/` and `models/` folders) are created as you follow the plan in [PROJECT_PLAN.md](PROJECT_PLAN.md).
+3. **Predict.** For new text, the same vectorizer turns the input into a vector and the classifier returns a `REAL` or `FAKE` verdict along with a confidence score.
 
-## Getting started
+## Tools used
 
-### 1. Get the dataset
-
-Download `news.csv` (~7,796 rows, columns: `id`, `title`, `text`, `label`) and save it to `data/news.csv`. Good sources:
-
-- **Kaggle** — search "fake or real news" (`fake_or_real_news.csv`)
-- **GitHub** — many repos mirror the same dataset
-- The **Google Drive** link in the [original DataFlair tutorial](https://data-flair.training/blogs/advanced-python-project-detecting-fake-news/)
-
-### 2. Install dependencies
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-> `scikit-learn` is the correct package name. The older `sklearn` name is deprecated.
-
-### 3. Train the model
-
-```bash
-python train.py
-```
-
-This prints the accuracy (~92–93%) and saves both model files to `models/`.
-
-### 4. Classify a single input
-
-```bash
-python predict.py
-```
-
-Edit the `sample` string in the script to test your own headline or article.
-
-### 5. Run the web app
-
-```bash
-streamlit run app.py
-```
-
-Opens a browser tab at `http://localhost:8501` where you can paste an article and get a verdict.
-
-## Example
-
-```
-Input:  "Scientists confirm a new cure for all diseases overnight."
-Output: FAKE   (confidence: -0.842)
-```
+- **Python** — the core language
+- **scikit-learn** — `TfidfVectorizer` for text vectorization and `PassiveAggressiveClassifier` for classification, plus train/test splitting and evaluation metrics (accuracy, confusion matrix)
+- **pandas** / **numpy** — data loading and manipulation
+- **Streamlit** — the web UI for entering text and viewing predictions
+- **joblib** — serializing the trained model and vectorizer so they can be reused without retraining
 
 ## Limitations
 
-- The dataset is an **older, US-politics-heavy snapshot**, so the model does **not** generalize well to arbitrary modern articles — real BBC/NYT pieces may get flagged `FAKE`. This is a data limitation, not a code bug.
-- The vectorizer only knows words it saw during training, so unfamiliar phrasing gets weighted differently.
-
-## Stretch goals
-
-- Surface the confidence score as a human-readable percentage.
-- Try a more modern/balanced dataset, or add a third class (satire).
-- Compare against Logistic Regression or an SVM.
-- Use cross-validation for a more reliable accuracy estimate.
-- Deploy via Streamlit Community Cloud / Hugging Face Spaces.
+The model is only as good as its training data. The dataset is an older, US-politics-heavy snapshot, so the classifier doesn't generalize well to arbitrary modern articles — real BBC/NYT pieces may occasionally be flagged `FAKE`. This is a data limitation, not a code bug. Additionally, the vectorizer only understands words it encountered during training, so unfamiliar phrasing can be weighted unpredictably.
 
 ## Credits
 
-Built as a learning exercise based on the [DataFlair — Detecting Fake News with Python](https://data-flair.training/blogs/advanced-python-project-detecting-fake-news/) tutorial. See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the full build plan.
+Built as a learning exercise based on the [DataFlair — Detecting Fake News with Python](https://data-flair.training/blogs/advanced-python-project-detecting-fake-news/) tutorial. A full step-by-step build plan lives in [PROJECT_PLAN.md](PROJECT_PLAN.md).
