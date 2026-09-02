@@ -21,7 +21,7 @@ def predict(text: str):
 
 st.set_page_config(page_title="Fake News Detector", page_icon="📰", layout="centered")
 
-st.title("📰 Fake News Detector")
+st.title("Fake News Detector")
 st.markdown(
     "Paste an article or headline below and get an instant **REAL** / **FAKE** verdict. "
     "Powered by TF-IDF vectorization + a Passive-Aggressive classifier."
@@ -32,7 +32,7 @@ text = st.text_area("Article or headline:", height=200, placeholder="Paste your 
 if st.button("Predict", type="primary"):
     if text.strip():
         pred, conf = predict(text)
-        verdict = "🟢 REAL" if pred == "REAL" else "🔴 FAKE"
+        verdict = "REAL" if pred == "REAL" else "FAKE"
         st.write(f"### {verdict}")
         st.metric("Confidence score", f"{conf:.3f}", help="Positive = REAL, negative = FAKE")
     else:
