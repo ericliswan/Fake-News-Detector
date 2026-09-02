@@ -2,8 +2,8 @@
 """
 Training script for the Fake News Detector.
 
-Loads news.csv, trains a PassiveAggressiveClassifier on TF-IDF vectors,
-and saves the trained model and vectorizer for later use.
+Loads news.csv, trains an SGDClassifier (Passive-Aggressive mode) on
+TF-IDF vectors, and saves the trained model and vectorizer for later use.
 """
 
 # Step 4a — Imports
@@ -13,7 +13,7 @@ import itertools
 import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import PassiveAggressiveClassifier
+from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 
 # Step 4b — Load & prep data
@@ -40,10 +40,18 @@ tfidf_test = tfidf.transform(x_test)  # transform (no fit) on test
 print(f"TF-IDF vectorizer fit with vocabulary size: {len(tfidf.vocabulary_)}\n")
 
 # Step 4e — Train the classifier
-pac = PassiveAggressiveClassifier(max_iter=50)
+# SGDClassifier with 'pa1' replicates the Passive Aggressive algorithm
+# (PassiveAggressiveClassifier is deprecated in sklearn 1.8+).
+pac = SGDClassifier(
+    loss="hinge",
+    penalty=None,
+    learning_rate="pa1",
+    eta0=1.0,
+    max_iter=50,
+)
 pac.fit(tfidf_train, y_train)
 
-print("Passive Aggressive Classifier trained.\n")
+print("Classifier (SGD/Passive-Aggressive) trained.\n")
 
 # Step 4f — Evaluate
 y_pred = pac.predict(tfidf_test)
