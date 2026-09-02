@@ -19,7 +19,7 @@ def predict(text: str):
     return pred, conf
 
 
-st.set_page_config(page_title="Fake News Detector", page_icon="📰", layout="centered")
+st.set_page_config(page_title="Fake News Detector", layout="centered")
 
 st.title("Fake News Detector")
 st.markdown(
